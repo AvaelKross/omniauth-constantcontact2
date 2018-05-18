@@ -56,7 +56,18 @@ module OmniAuth
       end
 
       def callback_url
-        options[:redirect_uri] || full_host + script_name + callback_path
+        uri = options[:redirect_uri] || full_host + script_name + callback_path
+        query = callback_url_query
+
+        full_url = uri + query
+      end
+
+      def callback_url_query
+        query = ''
+        if options[:include_origin_domain]
+          query = '?origin_domain=' + request.env['HTTP_HOST']
+        end
+        query
       end
     end
   end
